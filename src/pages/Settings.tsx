@@ -1,17 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  User,
-  Globe,
-  Sun,
-  Volume2,
-  Shuffle,
-  Lightbulb,
-  Cloud,
-  Trash2,
-  Save,
-  AlertTriangle,
-  RotateCcw,
+  User, Globe, Sun, Volume2, Shuffle, Lightbulb,
+  Trash2, Save, AlertTriangle,
 } from 'lucide-react';
 import { useApp } from '@/App';
 import type { CEFRLevel } from '@/types/vocabulary';
@@ -28,12 +19,7 @@ export function Settings() {
   const [dailyGoal, setDailyGoal] = useState(vocabulary.profile.dailyGoal);
 
   const handleSaveProfile = () => {
-    vocabulary.updateProfile({
-      username,
-      email,
-      cefrLevel,
-      dailyGoal,
-    });
+    vocabulary.updateProfile({ username, email, cefrLevel, dailyGoal });
     addToast('Profile saved successfully', 'success');
   };
 
@@ -47,7 +33,7 @@ export function Settings() {
     { id: 'account' as const, label: 'Account', icon: User },
     { id: 'study' as const, label: 'Study', icon: Lightbulb },
     { id: 'display' as const, label: 'Display', icon: Sun },
-    { id: 'data' as const, label: 'Data', icon: Cloud },
+    { id: 'data' as const, label: 'Data', icon: Trash2 },
   ];
 
   return (
@@ -57,15 +43,13 @@ export function Settings() {
       transition={{ duration: 0.25 }}
       className="space-y-6"
     >
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-semibold text-[#1A1A2E]">Settings</h1>
         <p className="mt-1 text-sm text-[#6B6B80]">Configure your learning preferences</p>
       </div>
 
-      {/* Settings Layout */}
       <div className="grid gap-6 lg:grid-cols-[200px_1fr]">
-        {/* Sidebar */}
+        {/* Sidebar nav */}
         <div className="space-y-1">
           {sections.map((section) => (
             <button
@@ -83,8 +67,10 @@ export function Settings() {
           ))}
         </div>
 
-        {/* Content */}
+        {/* Content panels */}
         <div className="space-y-4">
+
+          {/* ── Account ── */}
           {activeSection === 'account' && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -100,7 +86,7 @@ export function Settings() {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full rounded-[10px] border border-[#E5E5DD] px-4 py-2.5 text-sm"
+                    className="w-full rounded-[10px] border border-[#E5E5DD] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5A623]/40"
                   />
                 </div>
 
@@ -110,7 +96,7 @@ export function Settings() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-[10px] border border-[#E5E5DD] px-4 py-2.5 text-sm"
+                    className="w-full rounded-[10px] border border-[#E5E5DD] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5A623]/40"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -124,7 +110,7 @@ export function Settings() {
                         onClick={() => setCefrLevel(level)}
                         className={`flex-1 rounded-lg py-2.5 text-sm font-medium transition-colors ${
                           cefrLevel === level
-                            ? 'bg-[#F5A623] text-white'
+                            ? 'bg-[#F5A623] text-white shadow-sm'
                             : 'bg-[#F5F5F0] text-[#6B6B80] hover:bg-[#EBEBE6]'
                         }`}
                       >
@@ -136,7 +122,7 @@ export function Settings() {
 
                 <div>
                   <label className="mb-1.5 block text-[13px] font-medium text-[#1A1A2E]">
-                    Daily Goal: {dailyGoal} words
+                    Daily Goal: <span className="text-[#F5A623] font-bold">{dailyGoal} words</span>
                   </label>
                   <input
                     type="range"
@@ -145,18 +131,17 @@ export function Settings() {
                     step={5}
                     value={dailyGoal}
                     onChange={(e) => setDailyGoal(Number(e.target.value))}
-                    className="w-full"
+                    className="w-full accent-[#F5A623]"
                   />
                   <div className="flex justify-between text-xs text-[#9B9BAE]">
-                    <span>5</span>
-                    <span>50</span>
+                    <span>5</span><span>50</span>
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={handleSaveProfile}
-                className="flex items-center gap-2 rounded-[10px] bg-[#F5A623] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#E09400]"
+                className="flex items-center gap-2 rounded-[10px] bg-[#F5A623] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#E09400] transition-colors shadow-sm"
               >
                 <Save className="h-4 w-4" strokeWidth={1.5} />
                 Save Changes
@@ -164,6 +149,7 @@ export function Settings() {
             </motion.div>
           )}
 
+          {/* ── Study ── */}
           {activeSection === 'study' && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -205,6 +191,7 @@ export function Settings() {
             </motion.div>
           )}
 
+          {/* ── Display ── */}
           {activeSection === 'display' && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -213,21 +200,22 @@ export function Settings() {
             >
               <h2 className="text-lg font-semibold text-[#1A1A2E]">Display Settings</h2>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
+                {/* Theme */}
                 <div>
                   <label className="mb-2 block text-[13px] font-medium text-[#1A1A2E]">Theme</label>
                   <div className="flex gap-2">
-                    {[
-                      { value: 'light' as const, label: 'Light' },
-                      { value: 'dark' as const, label: 'Dark' },
-                      { value: 'system' as const, label: 'System' },
-                    ].map((theme) => (
+                    {([
+                      { value: 'light' as const, label: '☀️ Light' },
+                      { value: 'dark' as const, label: '🌙 Dark' },
+                      { value: 'system' as const, label: '⚙️ System' },
+                    ]).map((theme) => (
                       <button
                         key={theme.value}
                         onClick={() => vocabulary.updateSettings({ theme: theme.value })}
                         className={`flex-1 rounded-lg py-2.5 text-sm font-medium transition-colors ${
                           vocabulary.settings.theme === theme.value
-                            ? 'bg-[#F5A623] text-white'
+                            ? 'bg-[#F5A623] text-white shadow-sm'
                             : 'bg-[#F5F5F0] text-[#6B6B80] hover:bg-[#EBEBE6]'
                         }`}
                       >
@@ -235,22 +223,26 @@ export function Settings() {
                       </button>
                     ))}
                   </div>
+                  <p className="mt-2 text-xs text-[#9B9BAE]">
+                    Theme changes apply to the whole app immediately.
+                  </p>
                 </div>
 
+                {/* Font Size */}
                 <div>
                   <label className="mb-2 block text-[13px] font-medium text-[#1A1A2E]">Font Size</label>
                   <div className="flex gap-2">
-                    {[
+                    {([
                       { value: 'small' as const, label: 'Small' },
                       { value: 'medium' as const, label: 'Medium' },
                       { value: 'large' as const, label: 'Large' },
-                    ].map((size) => (
+                    ]).map((size) => (
                       <button
                         key={size.value}
                         onClick={() => vocabulary.updateSettings({ fontSize: size.value })}
                         className={`flex-1 rounded-lg py-2.5 text-sm font-medium transition-colors ${
                           vocabulary.settings.fontSize === size.value
-                            ? 'bg-[#F5A623] text-white'
+                            ? 'bg-[#F5A623] text-white shadow-sm'
                             : 'bg-[#F5F5F0] text-[#6B6B80] hover:bg-[#EBEBE6]'
                         }`}
                       >
@@ -259,63 +251,46 @@ export function Settings() {
                     ))}
                   </div>
                 </div>
+
+                {/* Live preview */}
+                <div className="rounded-xl border border-[#E5E5DD] bg-[#F5F5F0] p-4">
+                  <p className="text-xs text-[#9B9BAE] mb-2">Preview</p>
+                  <p className={`font-medium text-[#1A1A2E] ${
+                    vocabulary.settings.fontSize === 'small' ? 'text-sm' :
+                    vocabulary.settings.fontSize === 'large' ? 'text-xl' : 'text-base'
+                  }`}>
+                    The quick brown fox jumps over the lazy dog.
+                  </p>
+                </div>
               </div>
             </motion.div>
           )}
 
+          {/* ── Data (Reset only — no sync for users) ── */}
           {activeSection === 'data' && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="space-y-4"
             >
-              {/* Google Sheets */}
-              <div className="rounded-2xl border border-[#E5E5DD] bg-white p-6 space-y-4">
-                <h2 className="text-lg font-semibold text-[#1A1A2E]">Google Sheets Sync</h2>
-                <div>
-                  <label className="mb-1.5 block text-[13px] font-medium text-[#1A1A2E]">Web App URL</label>
-                  <input
-                    type="text"
-                    value={vocabulary.settings.googleSheetUrl}
-                    onChange={(e) => vocabulary.updateSettings({ googleSheetUrl: e.target.value })}
-                    className="w-full rounded-[10px] border border-[#E5E5DD] px-4 py-2.5 text-sm"
-                    placeholder="https://script.google.com/macros/s/.../exec"
-                  />
-                </div>
-                <ToggleSetting
-                  label="Auto-sync"
-                  description="Automatically sync when adding new words"
-                  icon={Cloud}
-                  enabled={vocabulary.settings.autoSync}
-                  onChange={(val) => vocabulary.updateSettings({ autoSync: val })}
-                />
-                <button
-                  onClick={async () => {
-                    const result = await vocabulary.syncToGoogleSheets();
-                    addToast(result.message, result.success ? 'success' : 'error');
-                  }}
-                  disabled={!vocabulary.settings.googleSheetUrl}
-                  className="flex items-center gap-2 rounded-[10px] border border-[#E5E5DD] bg-white px-5 py-2.5 text-sm font-medium text-[#1A1A2E] hover:bg-[#F5F5F0] disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <RotateCcw className="h-4 w-4" strokeWidth={1.5} />
-                  Sync Now
-                </button>
-              </div>
-
-              {/* Data Management */}
               <div className="rounded-2xl border border-[#E5E5DD] bg-white p-6 space-y-4">
                 <h2 className="text-lg font-semibold text-[#1A1A2E]">Data Management</h2>
+                <p className="text-sm text-[#6B6B80]">
+                  Your data is stored locally on this device. Resetting progress will clear
+                  study history and streaks but keep your word list intact.
+                </p>
+
                 <div className="rounded-xl bg-red-50 p-4 border border-red-100">
                   <div className="flex items-start gap-3">
                     <AlertTriangle className="h-5 w-5 shrink-0 text-[#FF3B30] mt-0.5" strokeWidth={1.5} />
                     <div>
-                      <h3 className="text-sm font-semibold text-[#1A1A2E]">Reset Progress</h3>
+                      <h3 className="text-sm font-semibold text-[#1A1A2E]">Reset Study Progress</h3>
                       <p className="text-xs text-[#6B6B80] mt-1">
-                        This will reset all study progress, streaks, and session history. Your words will be kept.
+                        This will clear all study counts, streaks, and session history. Your word list will not be affected.
                       </p>
                       <button
                         onClick={() => setShowResetConfirm(true)}
-                        className="mt-3 flex items-center gap-2 rounded-lg border border-[#FF3B30] bg-white px-4 py-2 text-sm font-medium text-[#FF3B30] hover:bg-red-50"
+                        className="mt-3 flex items-center gap-2 rounded-lg border border-[#FF3B30] bg-white px-4 py-2 text-sm font-medium text-[#FF3B30] hover:bg-red-50 transition-colors"
                       >
                         <Trash2 className="h-4 w-4" strokeWidth={1.5} />
                         Reset Progress
@@ -329,7 +304,7 @@ export function Settings() {
         </div>
       </div>
 
-      {/* Reset Confirmation */}
+      {/* Reset confirmation modal */}
       {showResetConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-[#1A1A2E]/40 backdrop-blur-sm" onClick={() => setShowResetConfirm(false)} />
@@ -369,11 +344,7 @@ export function Settings() {
 }
 
 function ToggleSetting({
-  label,
-  description,
-  icon: Icon,
-  enabled,
-  onChange,
+  label, description, icon: Icon, enabled, onChange,
 }: {
   label: string;
   description: string;
@@ -394,9 +365,7 @@ function ToggleSetting({
       </div>
       <button
         onClick={() => onChange(!enabled)}
-        className={`relative h-6 w-11 rounded-full transition-colors ${
-          enabled ? 'bg-[#F5A623]' : 'bg-[#E5E5DD]'
-        }`}
+        className={`relative h-6 w-11 rounded-full transition-colors ${enabled ? 'bg-[#F5A623]' : 'bg-[#E5E5DD]'}`}
       >
         <div
           className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${

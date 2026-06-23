@@ -303,6 +303,23 @@ export function useVocabulary(dataKeyPrefix?: string) {
   useEffect(() => saveToStorage(KEYS.settings, settings), [settings, KEYS.settings]);
   useEffect(() => saveToStorage(KEYS.achievements, achievements), [achievements, KEYS.achievements]);
 
+  // Apply theme to document root
+  useEffect(() => {
+    const root = document.documentElement;
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = settings.theme === 'dark' || (settings.theme === 'system' && prefersDark);
+    root.classList.toggle('dark', isDark);
+  }, [settings.theme]);
+
+  // Apply font size to document root
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove('text-size-small', 'text-size-medium', 'text-size-large');
+    root.classList.add(`text-size-${settings.fontSize}`);
+    const sizes: Record<string, string> = { small: '14px', medium: '16px', large: '18px' };
+    root.style.fontSize = sizes[settings.fontSize] || '16px';
+  }, [settings.fontSize]);
+
   const addWord = useCallback((wordData: Omit<VocabularyWord, 'id' | 'dateAdded' | 'studyCount' | 'correctCount' | 'isLearned' | 'difficulty'>) => {
     const newWord: VocabularyWord = {
       ...wordData,
